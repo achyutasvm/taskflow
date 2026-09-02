@@ -16,13 +16,22 @@ No test framework is configured in this project.
 
 ## Architecture
 
-Next.js App Router project (TypeScript, Tailwind CSS v4, npm). No backend/database — state is client-side only, persisted via `localStorage` where needed.
+Next.js App Router project (TypeScript, Tailwind CSS v4, npm). No real database — the app has two independent, parallel implementations of the same task-management feature, each demonstrating a different state pattern:
 
-- `app/` — routes only (`page.tsx`, `layout.tsx`, `globals.css`). File-based routing: a new route is a new folder under `app/` with a `page.tsx`.
+- **`/` (Home → `TaskList`)** — client-only. `hooks/useTasks.ts` owns the `Task[]` state and persists it to `localStorage`.
+- **`/tasks`** — server-backed via Next.js Route Handlers under `app/api/tasks/`, which read/write `lib/taskStore.ts`, a module-level in-memory array (no `localStorage`, no real database; state resets whenever the dev server restarts — that's expected). The page component calls `fetch` directly rather than going through a hook.
+
+Don't assume one pattern generalizes to the other — check which one a change targets before porting logic across.
+
+- `app/` — routes only (`page.tsx`, `layout.tsx`, `globals.css`) plus `api/` Route Handlers (`route.ts` for a collection, `[id]/route.ts` for a single item). File-based routing: a new route is a new folder under `app/` with a `page.tsx`.
 - `components/` — reusable UI, one component per file, PascalCase filenames matching the export.
-- `hooks/` — custom hooks that own a piece of state plus its side effects (e.g. `useTasks` owns task state, `localStorage` sync, and the CRUD actions for it — a component consuming it just renders and calls the returned functions).
-- `lib/` — shared types and any framework-agnostic logic.
+- `hooks/` — custom hooks that own a piece of state plus its side effects (e.g. `useTasks` owns task state, `localStorage` sync, and the CRUD actions for it — a component consuming it just renders and calls the returned functions). Only the `localStorage`-backed pattern uses this; API-backed pages `fetch` inline.
+- `lib/` — shared types (`types.ts`) plus one in-memory store module per API resource (e.g. `taskStore.ts`: a module-level array and plain exported functions, no class).
 - `@/*` resolves to the project root (`tsconfig.json` path alias), e.g. `@/lib/types`, `@/hooks/useTasks`.
+
+### Adding a new API resource
+
+Use the `new-api-route` skill (`.claude/skills/new-api-route/`) rather than improvising — it codifies the store-module + collection-route + `[id]`-route pattern above, reusing `lib/taskStore.ts` and `app/api/tasks/` as the reference implementation. After adding a new `[id]/route.ts`, run `npx next typegen` to regenerate the `RouteContext<'...'>` types it depends on, or TypeScript will fail with `Cannot find name 'RouteContext'`.
 
 ### Styling
 
