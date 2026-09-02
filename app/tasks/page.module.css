@@ -84,14 +84,43 @@
   margin: 0;
 }
 
-.dateStamp {
+.headerMeta {
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dateStamp {
   font-family: var(--font-plex-mono), ui-monospace, monospace;
   font-size: 0.75rem;
   color: var(--ink-faint);
   border: 1px solid var(--paper-line);
   border-radius: 2px;
   padding: 0.2rem 0.5rem;
+}
+
+.clearCompleted {
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  background: none;
+  border: none;
+  color: var(--ink-faint);
+  cursor: pointer;
+  padding: 0.2rem 0;
+  text-decoration: underline;
+  text-decoration-color: var(--paper-line);
+  text-underline-offset: 2px;
+}
+
+.clearCompleted:hover {
+  color: var(--stamp);
+  text-decoration-color: var(--stamp);
+}
+
+.clearCompleted:focus-visible {
+  outline: 2px solid var(--stamp);
+  outline-offset: 2px;
 }
 
 .addRow {

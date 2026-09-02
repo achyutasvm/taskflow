@@ -67,6 +67,11 @@ export default function TasksPage() {
     setTasks((prev) => prev.filter((t) => t.id !== id));
   }
 
+  async function handleClearCompleted() {
+    await fetch("/api/tasks", { method: "DELETE" });
+    setTasks((prev) => prev.filter((t) => !t.completed));
+  }
+
   return (
     <div className="flex flex-1 items-center justify-center px-6 py-16">
       <div
@@ -81,7 +86,18 @@ export default function TasksPage() {
 
         <div className={styles.header}>
           <h1 className={styles.title}>Tasks</h1>
-          {dateStamp && <span className={styles.dateStamp}>{dateStamp}</span>}
+          <div className={styles.headerMeta}>
+            {tasks.some((t) => t.completed) && (
+              <button
+                type="button"
+                onClick={handleClearCompleted}
+                className={styles.clearCompleted}
+              >
+                Clear completed
+              </button>
+            )}
+            {dateStamp && <span className={styles.dateStamp}>{dateStamp}</span>}
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className={styles.addRow}>

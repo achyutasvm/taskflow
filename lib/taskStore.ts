@@ -24,3 +24,11 @@ export function deleteTask(id: string): boolean {
   tasks.splice(index, 1);
   return true;
 }
+
+export function clearCompletedTasks(): number {
+  const remaining = tasks.filter((t) => !t.completed);
+  const removed = tasks.length - remaining.length;
+  tasks.length = 0;
+  tasks.push(...remaining);
+  return removed;
+}

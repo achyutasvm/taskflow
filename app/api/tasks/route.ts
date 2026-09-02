@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
-import { listTasks, addTask } from "@/lib/taskStore";
+import { listTasks, addTask, clearCompletedTasks } from "@/lib/taskStore";
 
 export async function GET() {
   return NextResponse.json(listTasks());
+}
+
+export async function DELETE() {
+  const removed = clearCompletedTasks();
+  return NextResponse.json({ removed });
 }
 
 export async function POST(request: Request) {
