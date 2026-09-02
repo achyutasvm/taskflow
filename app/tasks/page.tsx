@@ -85,7 +85,14 @@ export default function TasksPage() {
         </div>
 
         <div className={styles.header}>
-          <h1 className={styles.title}>Tasks</h1>
+          <div>
+            <h1 className={styles.title}>Tasks</h1>
+            {tasks.length > 0 && (
+              <p className={styles.progress}>
+                {tasks.filter((t) => t.completed).length} of {tasks.length} done
+              </p>
+            )}
+          </div>
           <div className={styles.headerMeta}>
             {tasks.some((t) => t.completed) && (
               <button

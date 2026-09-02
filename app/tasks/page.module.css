@@ -84,6 +84,13 @@
   margin: 0;
 }
 
+.progress {
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+  margin: 0.2rem 0 0;
+}
+
 .headerMeta {
   flex-shrink: 0;
   display: flex;
